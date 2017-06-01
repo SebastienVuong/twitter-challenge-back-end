@@ -1,15 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 
-// const morgan = require('morgan');
-// const bodyParser = require('body-parser');
-
 const tweets = require('./tweets.js')
 
 const app = express();
 app.use(cors());
-// app.use(morgan('dev'));
-// app.use(bodyParser.json())
 app.use('/tweets', tweets());
 
 // Start the server

@@ -3,26 +3,26 @@ const express = require('express');
 
 require('dotenv').config();
 
+const API_key = process.env.API_KEY;
+const API_secret = process.env.API_SECRET;
+const access_token = process.env.ACCESS_TOKEN;
+const access_token_secret = process.env.ACCESS_TOKEN_SECRET;
+// console.log(API_key); // VALIDATING .env VARIABLES
+
+const T = new Twit({
+    consumer_key: API_key,
+    consumer_secret: API_secret,
+    access_token: access_token,
+    access_token_secret: access_token_secret,
+    timeout_ms: 60*1000
+})
+        
+
 module.exports = () => {
     const tweets = express.Router();
     
     tweets.get('/', (req,res) => {
         // console.log('tweets.get'); // TRACKER
-
-        const API_key = process.env.API_KEY;
-        const API_secret = process.env.API_SECRET;
-        const access_token = process.env.ACCESS_TOKEN;
-        const access_token_secret = process.env.ACCESS_TOKEN_SECRET;
-        // console.log(API_key); // VALIDATING .env VARIABLES
-        
-        const T = new Twit({
-            consumer_key: API_key,
-            consumer_secret: API_secret,
-            access_token: access_token,
-            access_token_secret: access_token_secret,
-            timeout_ms: 60*1000
-        })
-        
         var fromWho = req.query.account; 
         var howMany = req.query.count; 
         var tweets = {
