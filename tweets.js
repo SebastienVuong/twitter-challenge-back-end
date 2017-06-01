@@ -16,7 +16,6 @@ const T = new Twit({
     access_token_secret: access_token_secret,
     timeout_ms: 60*1000
 })
-        
 
 module.exports = () => {
     const tweets = express.Router();
@@ -25,28 +24,21 @@ module.exports = () => {
         // console.log('tweets.get'); // TRACKER
         var fromWho = req.query.account; 
         var howMany = req.query.count; 
-        var tweets = {
-            created_at: [],
-            text: [],
-            url: [],
-            image: [],
-            id: []
-        };
-
+        var tweets;
+        
         T.get('statuses/user_timeline', {screen_name: fromWho, count: howMany}, function(err,data,response) {
-            data.forEach(tweet => {
+            tweets = data.map(tweet=>{
                 var url = `https:twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
-                tweets.created_at.push(tweet.created_at);
-                tweets.text.push(tweet.text);
-                tweets.url.push(url);
-                tweets.image.push(tweet.user.profile_image_url_https);
-                tweets.id.push(tweet.id_str);
-            });
-            return tweets;
+                return {
+                    created_at: tweet.created_at,
+                    text: tweet.text,
+                    url: url,
+                    image: tweet.user.profile_image_url_https,
+                    id: tweet.id_str
+                }
+            })
         })
-        .then( () => {
-            return res.json(tweets);
-        })
+        .then(() => res.json(tweets))
         .catch(err => res.json(err));
     });
     
