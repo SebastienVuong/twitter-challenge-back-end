@@ -26,8 +26,21 @@ module.exports = () => {
         var howMany = req.query.count; 
         var tweets;
         
-        T.get('statuses/user_timeline', {screen_name: fromWho, count: howMany}, function(err,data,response) {
-            tweets = data.map(tweet=>{
+        // T.get('statuses/user_timeline', {screen_name: fromWho, count: howMany}, function(err,data,response) {
+        //     tweets = data.map(tweet=>{
+        //         var url = `https:twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
+        //         return {
+        //             created_at: tweet.created_at,
+        //             text: tweet.text,
+        //             url: url,
+        //             image: tweet.user.profile_image_url_https,
+        //             id: tweet.id_str
+        //         }
+        //     })
+        // })
+        T.get('statuses/user_timeline', {screen_name: fromWho, count: howMany})
+        .then(result => {
+            var tweets = result.data.map(tweet=>{
                 var url = `https:twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
                 return {
                     created_at: tweet.created_at,
@@ -37,8 +50,8 @@ module.exports = () => {
                     id: tweet.id_str
                 }
             })
+            return res.json(tweets);
         })
-        .then(() => res.json(tweets))
         .catch(err => res.json(err));
     });
     
